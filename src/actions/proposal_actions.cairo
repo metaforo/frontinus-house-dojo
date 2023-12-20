@@ -5,6 +5,7 @@ trait IProposalActions<TContractState> {
     fn create(
         self: @TContractState, option_count: u8, end_block: u64, metadata_url: MetadataUrl,
     ) -> u32;
+// TODO: invoke action
 }
 
 #[dojo::contract]
