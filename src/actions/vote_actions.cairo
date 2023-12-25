@@ -48,7 +48,7 @@ mod vote_actions {
             let mut proposal = get!(world, proposal_id, Proposal);
             proposal.refresh_status(world);
             assert(proposal.status == ProposalStatus::Open, 'proposal not open');
-            assert(option_id < proposal.option_count, 'invalid option');
+            assert(option_id < 2, 'invalid option');
 
             let participant_address = starknet::get_caller_address();
             let mut cfg = get!(world, CONFIG_KEY, (GlobalConfig));

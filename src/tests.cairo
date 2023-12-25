@@ -50,11 +50,11 @@ fn create_init_proposal(
 ) -> Proposal {
     let proposal_id = proposal_actions
         .create(
-            3,
             12871283,
             MetadataUrl { part1: 'tGHSppCUlx5VokPISjRefDy8QPVuzj', part2: 'CIftsTYJzHP4w' },
             starknet::contract_address_const::<0x1>(),
             1,
+            3,
         );
     get!(world, (proposal_id), Proposal)
 }

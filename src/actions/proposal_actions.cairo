@@ -5,11 +5,11 @@ use starknet::ContractAddress;
 trait IProposalActions<TContractState> {
     fn create(
         self: @TContractState,
-        option_count: u8,
         end_block: u64,
         metadata_url: MetadataUrl,
         contract_addr: ContractAddress,
         entrypoint: felt252,
+        call_data: felt252,
     ) -> u32;
 
     fn invoke(self: @TContractState, proposal_id: u32);
@@ -41,11 +41,11 @@ mod proposal_actions {
     impl ProposalActionsImpl of IProposalActions<ContractState> {
         fn create(
             self: @ContractState,
-            option_count: u8,
             end_block: u64,
             metadata_url: MetadataUrl,
             contract_addr: ContractAddress,
             entrypoint: felt252,
+            call_data: felt252,
         ) -> u32 {
             let world = self.world_dispatcher.read();
 
@@ -61,7 +61,6 @@ mod proposal_actions {
                 id,
                 proposer_address,
                 metadata_url,
-                option_count: 2,
                 start_block,
                 end_block,
                 participant_count: 0,
@@ -69,6 +68,7 @@ mod proposal_actions {
                 status: ProposalStatus::Open,
                 contract_addr,
                 entrypoint,
+                call_data,
             };
 
             set!(world, (cfg, proposal));
@@ -83,10 +83,9 @@ mod proposal_actions {
             let mut proposal = get!(world, proposal_id, (Proposal));
 
             let mut call_data: Array<felt252> = ArrayTrait::new();
-            let param = 23;
-            Serde::serialize(@param, ref call_data);
+            Serde::serialize(@proposal.call_data, ref call_data);
             let mut res = starknet::call_contract_syscall(
-                proposal.contract_addr, selector!("update_global"), call_data.span(),
+                proposal.contract_addr, proposal.entrypoint, call_data.span(),
             );
         }
     }
@@ -106,11 +105,11 @@ mod proposal_tests {
         let DefaultWorld{world, proposal_actions, caller, .. } = init_world();
         let proposal_id = proposal_actions
             .create(
-                2,
                 12871283,
                 MetadataUrl { part1: 'tGHSppCUlx5VokPISjRefDy8QPVuzj', part2: 'CIftsTYJzHP4w' },
                 starknet::contract_address_const::<0x1>(),
-                1
+                1,
+                23,
             );
         assert(proposal_id == 1, 'proposal id incorrect');
 
