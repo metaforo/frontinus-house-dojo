@@ -1,11 +1,18 @@
 use dojo_gov::models::proposal::{MetadataUrl};
+use starknet::ContractAddress;
 
 #[starknet::interface]
 trait IProposalActions<TContractState> {
     fn create(
-        self: @TContractState, option_count: u8, end_block: u64, metadata_url: MetadataUrl,
+        self: @TContractState,
+        option_count: u8,
+        end_block: u64,
+        metadata_url: MetadataUrl,
+        contract_addr: ContractAddress,
+        entrypoint: felt252,
     ) -> u32;
-// TODO: invoke action
+
+    fn invoke(self: @TContractState, proposal_id: u32);
 }
 
 #[dojo::contract]
@@ -15,6 +22,8 @@ mod proposal_actions {
     use dojo_gov::models::global::{CONFIG_KEY, GlobalConfig};
     use super::IProposalActions;
     use dojo_gov::models::proposal::{MetadataUrl};
+    use core::serde::Serde;
+    use starknet::SyscallResultTrait;
 
     #[event]
     #[derive(Drop, starknet::Event)]
@@ -31,11 +40,14 @@ mod proposal_actions {
     #[external(v0)]
     impl ProposalActionsImpl of IProposalActions<ContractState> {
         fn create(
-            self: @ContractState, option_count: u8, end_block: u64, metadata_url: MetadataUrl,
+            self: @ContractState,
+            option_count: u8,
+            end_block: u64,
+            metadata_url: MetadataUrl,
+            contract_addr: ContractAddress,
+            entrypoint: felt252,
         ) -> u32 {
             let world = self.world_dispatcher.read();
-
-            assert(option_count > 1, 'option count too low');
 
             // Ensure the end_block is either zero (indicating no set end block) or greater than the start_block.
             let start_block = starknet::get_block_info().unbox().block_number;
@@ -49,12 +61,14 @@ mod proposal_actions {
                 id,
                 proposer_address,
                 metadata_url,
-                option_count,
+                option_count: 2,
                 start_block,
                 end_block,
                 participant_count: 0,
                 vote_count: 0,
                 status: ProposalStatus::Open,
+                contract_addr,
+                entrypoint,
             };
 
             set!(world, (cfg, proposal));
@@ -62,6 +76,18 @@ mod proposal_actions {
             emit!(world, ProposalCreated { id, proposal });
 
             id
+        }
+
+        fn invoke(self: @ContractState, proposal_id: u32) {
+            let world = self.world_dispatcher.read();
+            let mut proposal = get!(world, proposal_id, (Proposal));
+
+            let mut call_data: Array<felt252> = ArrayTrait::new();
+            let param = 23;
+            Serde::serialize(@param, ref call_data);
+            let mut res = starknet::call_contract_syscall(
+                proposal.contract_addr, selector!("update_global"), call_data.span(),
+            );
         }
     }
 }
@@ -83,6 +109,8 @@ mod proposal_tests {
                 2,
                 12871283,
                 MetadataUrl { part1: 'tGHSppCUlx5VokPISjRefDy8QPVuzj', part2: 'CIftsTYJzHP4w' },
+                starknet::contract_address_const::<0x1>(),
+                1
             );
         assert(proposal_id == 1, 'proposal id incorrect');
 
