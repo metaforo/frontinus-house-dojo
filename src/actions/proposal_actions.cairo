@@ -49,8 +49,6 @@ mod proposal_actions {
         ) -> u32 {
             let world = self.world_dispatcher.read();
 
-            assert(option_count > 1, 'option count too low');
-
             // Ensure the end_block is either zero (indicating no set end block) or greater than the start_block.
             let start_block = starknet::get_block_info().unbox().block_number;
             assert(end_block == 0 || end_block > start_block, 'end block invalid');
@@ -63,7 +61,7 @@ mod proposal_actions {
                 id,
                 proposer_address,
                 metadata_url,
-                option_count,
+                option_count: 2,
                 start_block,
                 end_block,
                 participant_count: 0,
@@ -111,6 +109,8 @@ mod proposal_tests {
                 2,
                 12871283,
                 MetadataUrl { part1: 'tGHSppCUlx5VokPISjRefDy8QPVuzj', part2: 'CIftsTYJzHP4w' },
+                starknet::contract_address_const::<0x1>(),
+                1
             );
         assert(proposal_id == 1, 'proposal id incorrect');
 

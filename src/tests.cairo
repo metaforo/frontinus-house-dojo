@@ -53,6 +53,8 @@ fn create_init_proposal(
             3,
             12871283,
             MetadataUrl { part1: 'tGHSppCUlx5VokPISjRefDy8QPVuzj', part2: 'CIftsTYJzHP4w' },
+            starknet::contract_address_const::<0x1>(),
+            1,
         );
     get!(world, (proposal_id), Proposal)
 }
