@@ -13,6 +13,8 @@ struct Proposal {
     start_block: u64, // Block number at which the proposal voting starts.
     end_block: u64, // Block number at which the proposal voting ends. Maybe 0.
     status: ProposalStatus,
+    contract_addr: ContractAddress,
+    entrypoint: felt252,
 // TODO: contract address, entrypoint, calldata
 }
 
