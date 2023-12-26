@@ -7,9 +7,11 @@ version = "0.4.0"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", version = "0.4.1" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.4.0" }
+eternum = { git = "https://github.com/BibliothecaDAO/eternum.git", rev = "7b36c3c0b12d0a3dc225a8cf4bc8e275a6dfc1ba" }
 
 [[target.dojo]]
+build-external-contracts = ["eternuma::models::*", "eternum::systems::*"]
 
 [tool.dojo]
 initializer_class_hash = "0xbeef"
