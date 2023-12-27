@@ -12,14 +12,15 @@ trait IProposalActions<TContractState> {
         call_data: felt252,
     ) -> u32;
 
-    fn invoke(self: @TContractState, proposal_id: u32);
+    fn execute(self: @TContractState, proposal_id: u32);
 }
 
 #[dojo::contract]
 mod proposal_actions {
     use starknet::ContractAddress;
-    use dojo_gov::models::proposal::{Proposal, ProposalStatus};
+    use dojo_gov::models::proposal::{Proposal, ProposalStatus, ProposalTrait};
     use dojo_gov::models::global::{CONFIG_KEY, GlobalConfig};
+    use dojo_gov::models::option_summary::OptionSummary;
     use super::IProposalActions;
     use dojo_gov::models::proposal::{MetadataUrl};
     use core::serde::Serde;
@@ -65,7 +66,7 @@ mod proposal_actions {
                 end_block,
                 participant_count: 0,
                 vote_count: 0,
-                status: ProposalStatus::Open,
+                status: ProposalStatus::Voting,
                 contract_addr,
                 entrypoint,
                 call_data,
@@ -78,15 +79,23 @@ mod proposal_actions {
             id
         }
 
-        fn invoke(self: @ContractState, proposal_id: u32) {
+        fn execute(self: @ContractState, proposal_id: u32) {
             let world = self.world_dispatcher.read();
             let mut proposal = get!(world, proposal_id, (Proposal));
+            // TODO : dont check proposal status for dev
+            // let status = proposal.refresh_status(world);
+            // assert(status != ProposalStatus::Executed, 'proposal has executed');
+            // assert(status != ProposalStatus::Voting, 'proposal not end');
+            // assert(status == ProposalStatus::Passed, 'proposal not passed');
 
             let mut call_data: Array<felt252> = ArrayTrait::new();
             Serde::serialize(@proposal.call_data, ref call_data);
             let mut res = starknet::call_contract_syscall(
                 proposal.contract_addr, proposal.entrypoint, call_data.span(),
             );
+
+            proposal.status = ProposalStatus::Executed;
+            set!(world, (proposal));
         }
     }
 }
@@ -117,7 +126,7 @@ mod proposal_tests {
         assert(cfg.proposal_count == proposal_id, 'wrong global config');
 
         let proposal = get!(world, (proposal_id), Proposal);
-        assert(proposal.status == ProposalStatus::Open, 'wrong proposal init status');
+        assert(proposal.status == ProposalStatus::Voting, 'wrong proposal init status');
         assert(proposal.proposer_address == caller, 'wrong proposal creater');
     }
 }

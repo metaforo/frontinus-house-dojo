@@ -47,7 +47,7 @@ mod vote_actions {
             // Validate proposal and option.
             let mut proposal = get!(world, proposal_id, Proposal);
             proposal.refresh_status(world);
-            assert(proposal.status == ProposalStatus::Open, 'proposal not open');
+            assert(proposal.status == ProposalStatus::Voting, 'proposal not open');
             assert(option_id < 2, 'invalid option');
 
             let participant_address = starknet::get_caller_address();
@@ -108,7 +108,7 @@ mod vote_tests {
 
         // Retrieve global configuration to validate vote count
         let cfg = get!(world, CONFIG_KEY, GlobalConfig);
-        assert(cfg.vote_count == 1, 'vote count wrong');
+        assert(cfg.vote_count == 1, 'global vote count wrong');
 
         // Retrieve proposal to validate vote and participant count
         let proposal = get!(world, (proposal.id), Proposal);
