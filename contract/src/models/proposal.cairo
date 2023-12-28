@@ -12,7 +12,7 @@ struct Proposal {
     vote_count: u32, // mutable. Total number of votes cast across all options.
     start_block: u64, // Block number at which the proposal voting starts.
     end_block: u64, // Block number at which the proposal voting ends. Maybe 0.
-    status: ProposalStatus,
+    status: u32,
     contract_addr: ContractAddress,
     entrypoint: felt252,
     call_data: felt252,
@@ -24,31 +24,17 @@ struct MetadataUrl {
     part2: felt252,
 }
 
-// Represents the various possible statuses of a proposal within the voting system.
-#[derive(Serde, Copy, Drop, PartialEq, Introspect)]
-enum ProposalStatus {
-    Undefined,
-    Voting, // Proposal is in the voting period.
-    Passed, // Voting period ended, votes passed, proposal awaiting execution.
-    Rejected, // Voting period ended, votes did not pass, proposal cannot be executed.
-    Executed // Proposal has been executed successfully.
-}
-
-impl ProposalStatusIntoFelt252 of Into<ProposalStatus, felt252> {
-    fn into(self: ProposalStatus) -> felt252 {
-        match self {
-            ProposalStatus::Undefined => 0,
-            ProposalStatus::Voting => 1,
-            ProposalStatus::Passed => 2,
-            ProposalStatus::Rejected => 3,
-            ProposalStatus::Executed => 4,
-        }
-    }
+mod ProposalStatus {
+    const Undefined: u32 = 0;
+    const Voting: u32 = 1; // Proposal is in the voting period.
+    const Passed: u32 = 2; // Voting period ended, votes passed, proposal awaiting execution.
+    const Rejected: u32 = 3; //  votes did not pass, proposal cannot be executed.
+    const Executed: u32 = 4;
 }
 
 #[generate_trait]
 impl ProposalImpl of ProposalTrait {
-    fn refresh_status(ref self: Proposal, world: IWorldDispatcher) -> ProposalStatus {
+    fn refresh_status(ref self: Proposal, world: IWorldDispatcher) -> u32 {
         if (self.end_block == 0 || self.status != ProposalStatus::Voting) {
             return self.status;
         }
