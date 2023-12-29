@@ -37,30 +37,12 @@ function App() {
     });
 
 
-    const [proposals,setProposals] = useState([] as any );
     const [option,setOption] = useState(0);
     const [loading,setLoading] = useState(false);
     const [voteHash,setVoteHash] = useState("");
     const [voteId,setVoteId] = useState(0);
     const [hash,setHash] = useState("");
 
-    // entity id we are syncing
-
-
-    // get current component values
-
-    // const position = useComponentValue(Position, entityId);
-    // const moves = useComponentValue(Moves, entityId);
-
-
-
-    // const t = useEntityQuery([Has(Proposal)]);
-    // console.log(t[0]);
-
-    // const outpost = getComponentValueStrict(Proposal, t[0]);
-    // console.log(outpost);
-
-    // const entities = getEntities(network,Proposal);
 
     const handleRestoreBurners = async () => {
         try {
@@ -82,6 +64,9 @@ function App() {
 
     const handleVote = async (account:any,id:any) => {
         try {
+            if ( !account ){
+                return;
+            }
             const hash = await voteProposal(account,id,option);
             setVoteHash(hash);
             setVoteId(id);
@@ -94,20 +79,22 @@ function App() {
         window.scrollTo(0, document.body.scrollHeight);
     };
 
-
-    const getVote = (entityId:any) => {
-        try {
-            // console.log(value);
-            return useComponentValue(OptionSummary, entityId);
-
-        } catch (error) {
-            return null;
-        }
-    };
+    //
+    // const getVote = (entityId:any) => {
+    //     try {
+    //         // console.log(value);
+    //         return useComponentValue(OptionSummary, entityId);
+    //
+    //     } catch (error) {
+    //         return null;
+    //     }
+    // };
 
     const handleCreate = async (account:any) => {
         try {
-
+            if ( !account ){
+                return;
+            }
             setHash("");
             setLoading(true);
             const hash = await createProposal(account);
@@ -179,10 +166,6 @@ function App() {
                     proposalEntities.length > 0 && proposalEntities.map(function (value, key) {
 
                         const tmp = getComponentValueStrict(Proposal, value);
-
-                        console.log(tmp);
-
-
 
                         const yesEntityId = getEntityIdFromKeys([BigInt(tmp.id),BigInt(0)]) as Entity;
                         const noEntityId = getEntityIdFromKeys([BigInt(tmp.id),BigInt(1)]) as Entity;
