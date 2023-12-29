@@ -1,10 +1,10 @@
-# RealmGovernance Hub: Empowering Community Consensus in the Game of Eternum
+# RealmGovernance Hub: Empowering Community Consensus in Games Developed Using the DOJO Engine on Starknet
 
 ## Introduction
 
-Built on the robust architecture of Frontinus House and coded in DOJO, our world governance module, RealmGovernance Hub, revolutionizes the altering of attributes and parameters in the Game of Eternum. Operating fully on-chain, this module establishes a democratic process where community members can propose alterations by submitting a BIP on Frontinus House.
+Built on the robust architecture of Frontinus House and coded in DOJO, our world governance module, RealmGovernance Hub, revolutionizes the altering of attributes and parameters in games developed using the DOJO engine on Starknet. Operating fully on-chain, this module establishes a democratic process where community members can propose alterations by submitting a BIP on Frontinus House.
 
-Upon proposal submission, a community-wide vote ensues, utilizing on-chain voting mechanisms that involve the burning of gas fees for added transparency. Once the vote concludes, the game parameters are seamlessly adjusted in accordance with the passed BIP consensus. Join us in shaping the future of the Game of Eternum through decentralized and community-driven governance.
+Upon proposal submission, a community-wide vote ensues, utilizing on-chain voting mechanisms that involve the burning of gas fees for added transparency. Once the vote concludes, the game parameters are seamlessly adjusted in accordance with the passed BIP consensus. Join us in shaping the future of games developed using the DOJO engine on Starknet through decentralized and community-driven governance.
 
 ## Project Architecture
 
