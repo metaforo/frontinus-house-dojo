@@ -77,12 +77,13 @@ The transition between these states is governed by the logic within the smart co
 
 By managing the state of each proposal transparently and systematically, RealmGovernance Hub ensures a clear and auditable governance process that aligns with the principles of decentralized decision-making.
 
+## Online Demo
+
+https://bip-zhoupufelix-felixs-projects-cfb2e9f3.vercel.app/
 
 ## Contact
 
-Endpoint : [slot](https://api.cartridge.gg/x/dojo-gov-27/katana)
-World Adderss: 0x2e0b9ee68542d766af0afed2bf9d4e197f48d3d20281fbdf3e910c2c5b30b8b
-Proposal Actions: 0xdaf3b44814ca688d56cc92e76b180bb7ea56a79303161810b485c42c14b0bc
-Vote Actions:  0x33f21150bcc5778ba957daffb13ed3131e9e0dcd58103a23dfac1c5b9f9d487
-
-Online Demo : https://bip-zhoupufelix-felixs-projects-cfb2e9f3.vercel.app/
+- Endpoint : [slot](https://api.cartridge.gg/x/dojo-gov-27/katana)
+- World Adderss: 0x2e0b9ee68542d766af0afed2bf9d4e197f48d3d20281fbdf3e910c2c5b30b8b
+- Proposal Actions: 0xdaf3b44814ca688d56cc92e76b180bb7ea56a79303161810b485c42c14b0bc
+- Vote Actions:  0x33f21150bcc5778ba957daffb13ed3131e9e0dcd58103a23dfac1c5b9f9d487
