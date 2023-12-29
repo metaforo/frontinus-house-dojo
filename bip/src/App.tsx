@@ -68,7 +68,7 @@ function App() {
                 return;
             }
             const hash = await voteProposal(account,id,option);
-            setVoteHash(hash);
+            setVoteHash(hash+'');
             setVoteId(id);
         } catch (error) {
 
@@ -98,7 +98,7 @@ function App() {
             setHash("");
             setLoading(true);
             const hash = await createProposal(account);
-            setHash(hash);
+            setHash(hash+'');
             setLoading(false);
             scrollToBottom();
 
